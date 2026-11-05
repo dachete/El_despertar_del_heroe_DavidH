@@ -2,7 +2,7 @@ public class Personaje {
     private String nombre;
     private int vida;
 
-    public Personaje(String nombre, int vida){
+    public Personaje(String nombre, int vida) {
         this.nombre = nombre;
         this.vida = vida;
     }
@@ -23,22 +23,31 @@ public class Personaje {
         this.vida = vida;
     }
 
-    public String barravida(boolean obtenerDano){
-        int numBarras = 20;
-        String[] barra = new String[numBarras];
-        for(int i=0; i < barra.length; i++){
-            barra[i] = "█";
+    public void recibirDano(int dano) {
+        setVida(Math.max(0, getVida() - dano));
+    }
+
+    public String barraVida(int VIDA_MAXIMA) {
+        int bloques = getVida() * 20 / VIDA_MAXIMA;
+        String barra = "";
+        for (int i = 0; i < 20; i++) {
+            if (i < bloques) {
+                barra += "█";
+            } else {
+                barra += "-";
+            }
         }
-        return nombre + " " + String.join("",barra) + "  " + vida;
+        return getNombre() + " " + barra + "  " + getVida();
     }
 
-    public int calcularAtaque(int DANO_MIN, int DANO_MAX){
-        int ataque = (int) (Math.random() * (DANO_MAX - DANO_MIN + 1)) + DANO_MIN;
+    public int calcularAtaque(){
+        int ataque = 0;
         return ataque;
-    }
+    };
 
-    public boolean obtenerDano(){
-        boolean obtener = true;
-        return obtener;
+    public boolean curar(int cantidad, int VIDA_MAXIMA) {
+        int vidaAnterior = getVida();
+        setVida(Math.min(VIDA_MAXIMA, vidaAnterior + cantidad));
+        return getVida() > vidaAnterior;
     }
 }
