@@ -4,12 +4,12 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner teclado = new Scanner(System.in);
-        Personaje Ryu = new Ryu("Ryu", 100);
-        Personaje Dan_Hibiki = new Dan_Hibiki("Dan Hibiki", 40);
-        Boolean obtenerDano_Oponente = false;
-        Boolean obtenerDano_Ryu = false;
+        Ryu ryu = new Ryu("Ryu", Ryu.VIDA_INICIAL);
+        Dan_Hibiki dan = new Dan_Hibiki("Dan Hibiki", Dan_Hibiki.VIDA_INICIAL);
+        Akuma akuma = new Akuma("Akuma", Akuma.VIDA_INICIAL);
+        Personaje oponente = dan;
         String decision;
-        Escenas.imagenmain();
+        System.out.println(Escenas.imagenmain());
         System.out.println("**Para una mejor experiencia maximiza el tamaño de la terminal**");
         enter(1);
         do {
@@ -25,7 +25,7 @@ public class Main {
             } else if (decision.equalsIgnoreCase("Nueva partida")) {
                 nombreusuario(teclado);
                 intro(teclado, tutorial());
-                combate(teclado, Ryu, Dan_Hibiki, obtenerDano_Oponente, obtenerDano_Ryu);
+                combate(teclado, ryu, dan, akuma, oponente);
             } else if (decision.isBlank()) {
                 System.out.println("ERROR: Entrada nula no válida");
                 enter(1);
@@ -101,11 +101,11 @@ public class Main {
                 enter(2);
             } else {
                 error = true;
-                System.out.println("ERROR: Entrada de texto no váida");
+                System.out.println("ERROR: Entrada de texto no válida");
                 enter(1);
             }
         } while (error);
-        Escenas.fight();
+        System.out.println(Escenas.fight1());
         continuar(teclado);
     }
 
@@ -113,51 +113,106 @@ public class Main {
         String mostrartutorial = """
                        --------------------------------------------------------------------------------------- Tutorial ----------------------------------------------------------------------------------
 
-                Una vez iniciado el combate aparecerán los dos combatientes, jugarás como Ryu, el personaje de la izquierda. Abajo de cada uno se encuentra su barra de salud junto con su nombre a la izquierda 
-                y el nivel actual a la derecha. Para atacar al oponente se escribe Hit en la terminal, el daño causado tanto al oponente como a ti se calcula aleatoriamente dentro de un rango. 
+                Una vez iniciado el combate aparecerán los dos combatientes, jugarás como Ryu, el personaje de la izquierda. Abajo de cada uno se encuentra su barra de salud junto con su nombre a la izquierda
+                y el nivel actual a la derecha. Para atacar al oponente se escribe Hit en la terminal, el daño causado tanto al oponente como a ti se calcula aleatoriamente dentro de un rango. Después de
+                atacar al oponente se debe presionar la tecla Enter para que pueda atacarte a ti.
+
+                En tu turno, aparte de atacar, puedes abandonar (Abandonar), consultar el inventario (Inventario) o recuperar 25 puntos de vida (Curar). Dispones de 3 recuperaciones de 25 puntos de vida cada
+                una, al utilizarlas se consume el turno. Si las consumes todas en un combate no podrás recuperar vida y no se consumirá el turno, igual que si tienes la vida entera.
 
                 """;
 
         return mostrartutorial;
     }
 
-    static void mostrarBarra(Personaje Ryu, Personaje Dan_Hibiki, boolean obtenerDano_Oponente, boolean obtenerDano_Ryu) {
-        System.out.println("                          " + Ryu.barravida(obtenerDano_Oponente)
+    static void mostrarBarra(Ryu ryu, Personaje oponente) {
+        System.out.println("                          " + ryu.barraVida(Ryu.VIDA_MAXIMA)
                 + "                                                                            "
-                + Dan_Hibiki.barravida(obtenerDano_Ryu));
+                + oponente.barraVida(Dan_Hibiki.VIDA_INICIAL));
     }
 
-    static void ronda1(Scanner teclado, Personaje Ryu, Personaje Dan_Hibiki, boolean obtenerDano_Oponente, boolean obtenerDano_Ryu) {
-        Escenas.escena1();
-        mostrarBarra(Ryu, Dan_Hibiki, obtenerDano_Oponente, obtenerDano_Ryu);
-        
+    static void ronda1(Ryu ryu, Personaje oponente) {
+        System.out.println(Escenas.escena1());
+        mostrarBarra(ryu, oponente);
     }
 
-    static void combate(Scanner teclado, Personaje Ryu, Personaje Dan_Hibiki, boolean obtenerDano_Oponente, boolean obtenerDano_Ryu) {
-        boolean error;
-        for (int ronda = 1; ronda <= 3; ronda++) {
-            if(ronda == 1){
-                ronda1(teclado, Ryu, Dan_Hibiki, obtenerDano_Oponente, obtenerDano_Ryu);  
+    static void ronda2(Ryu ryu, Personaje oponente) {
+        System.out.println(Escenas.escena2());
+        mostrarBarra(ryu, oponente);
+    }
+
+    static void mostrarInventario(int[] inventario, int disponibles) {
+        for (int i = 0; i < disponibles; i++) {
+            System.out.println((i + 1) + ": Recuperación " + Ryu.VIDA_CURACIONES + " HP");
+        }
+    }
+
+    static void combate(Scanner teclado, Ryu ryu, Dan_Hibiki dan, Akuma akuma, Personaje oponente) {
+        int ronda;
+        String escenaCombate = Escenas.escena1CombateDan();
+        for (ronda = 0; ronda < 3; ronda++) {
+            if (ronda == 0) {
+                oponente = dan;
+                ronda1(ryu, oponente);
+            } else if(ronda == 1){
+                oponente = akuma;
             }
-            do {
-                System.out.print("");
-                String continuar = teclado.nextLine();
-                if (continuar.isBlank()) {
-                    error = true;
-                    ronda1(teclado, Ryu, Dan_Hibiki, obtenerDano_Oponente, obtenerDano_Ryu);
-                } else if (continuar.equalsIgnoreCase("Hit")) {
-                    obtenerDano_Oponente = true;
-                    error = false;
-                    Escenas.escena1CombateRyu();
-                    mostrarBarra(Ryu, Dan_Hibiki, obtenerDano_Oponente, obtenerDano_Ryu);
-                    continuar(teclado);
-                } else if (continuar.equalsIgnoreCase("Abandonar")) {
+            int[] inventario = { Ryu.VIDA_CURACIONES, Ryu.VIDA_CURACIONES, Ryu.VIDA_CURACIONES };
+            int disponibles = inventario.length;
+
+            while (ryu.getVida() > 0 && dan.getVida() > 0) {
+                System.out.println();
+                String accion = teclado.nextLine();
+                if (accion.equalsIgnoreCase("Abandonar")) {
                     return;
-                } else {
-                    error = true;
-                    ronda1(teclado, Ryu, Dan_Hibiki, obtenerDano_Oponente, obtenerDano_Ryu);
                 }
-            } while (error);
+                if (accion.equalsIgnoreCase("Inventario")) {
+                    mostrarInventario(inventario, disponibles);
+                    continue;
+                } else if (accion.equalsIgnoreCase("Hit")) {
+                    int danoRyu = ryu.calcularAtaque();
+                    oponente.recibirDano(danoRyu);
+                    System.out.println(Escenas.escena1CombateRyu());
+                    mostrarBarra(ryu, dan);
+                } else if (accion.equalsIgnoreCase("Curar")) {
+                    if (disponibles == 0) {
+                        ronda1(ryu, oponente);
+                        System.out.println("Has gastado todas tus recuperaciones de vida");
+                        continue;
+                    } else if (!ryu.curar(inventario[0], Ryu.VIDA_MAXIMA)) {
+                        ronda1(ryu, dan);
+                        System.out.println("No puedes recuperarte, tienes la vida completa");
+                        continue;
+                    } else {
+                        for (int i = 0; i < disponibles - 1; i++) {
+                            inventario[i] = inventario[i + 1];
+                        }
+                        disponibles--;
+                        inventario[disponibles] = 0;
+                        System.out.println(Escenas.escena1());
+                        mostrarBarra(ryu, oponente);
+                    }
+                } else {
+                    ronda1(ryu, dan);
+                    continue;
+                }
+                if(oponente.getVida() == 0) {
+                    enter(2);
+                    System.out.println(Escenas.win());
+                    enter(2);
+                    break;
+                }
+                continuar(teclado);
+                int danoOponente = dan.calcularAtaque();
+                ryu.recibirDano(danoOponente);
+                System.out.println(escenaCombate);
+                mostrarBarra(ryu, dan);
+                if (ryu.getVida() == 0) {
+                    enter(2);
+                    System.out.println(Escenas.gameover());
+                    enter(2);
+                } 
+            }
         }
     }
 }
