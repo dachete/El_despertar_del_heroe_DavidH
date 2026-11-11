@@ -108,8 +108,6 @@ public class Main {
                 enter(1);
             }
         } while (error);
-        System.out.println(Escenas.fight1());
-        continuar(teclado);
     }
 
     static String tutorial() {
@@ -176,11 +174,18 @@ public class Main {
                 escenaCombate1 = Escenas.escena2CombateRyu();
                 escenaCombate2 = Escenas.escena2CombateAkuma();
                 oponente.setVida(Akuma.VIDA_INICIAL);
+                System.out.println(Escenas.fight2());
+                continuar(teclado);
             } else if (ronda == 2) {
                 oponente = baison;
                 escenaCombate1 = Escenas.escena3CombateRyu();
                 escenaCombate2 = Escenas.escena3CombateBaison();
                 oponente.setVida(Baison.VIDA_INICIAL);
+                System.out.println(Escenas.fight3());
+                continuar(teclado);
+            } else{
+                System.out.println(Escenas.fight1());
+                continuar(teclado);
             }
             mostrarRonda(ronda, ryu, oponente);
 

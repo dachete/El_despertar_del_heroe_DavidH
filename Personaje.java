@@ -1,10 +1,12 @@
 public class Personaje {
     private String nombre;
     private int vida;
+    private final int vidaMaxima;
 
     public Personaje(String nombre, int vida) {
         this.nombre = nombre;
         this.vida = vida;
+        this.vidaMaxima = vida;
     }
 
     public String getNombre() {
@@ -21,6 +23,10 @@ public class Personaje {
 
     public void setVida(int vida) {
         this.vida = vida;
+    }
+
+    public int getvidaMaxima() {
+        return vidaMaxima;
     }
 
     public void recibirDano(int dano) {
@@ -40,7 +46,7 @@ public class Personaje {
         return getNombre() + " " + barra + "  " + getVida();
     }
 
-    public int calcularAtaque(){
+    public int calcularAtaque() {
         int ataque = 0;
         return ataque;
     };
@@ -49,5 +55,9 @@ public class Personaje {
         int vidaAnterior = getVida();
         setVida(Math.min(VIDA_MAXIMA, vidaAnterior + cantidad));
         return getVida() > vidaAnterior;
+    }
+
+    public int getVidaMaxima() {
+        return vidaMaxima;
     }
 }
