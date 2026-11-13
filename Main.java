@@ -1,8 +1,10 @@
 
 import java.util.Scanner;
 
+import XML.LeerXML;
+
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Scanner teclado = new Scanner(System.in);
         Ryu ryu = new Ryu("Ryu", Ryu.VIDA_INICIAL);
         Dan_Hibiki dan = new Dan_Hibiki("Dan Hibiki", Dan_Hibiki.VIDA_INICIAL);
@@ -19,7 +21,7 @@ public class Main {
             if (decision.equalsIgnoreCase("Salir")) {
                 break;
             } else if (decision.equalsIgnoreCase("Ranking")) {
-                System.out.println("Ranking");
+                LeerXML.mostrarRanking();
                 System.out.println("Pulsa Enter para volver al menú principal");
                 continuar(teclado);
             } else if (decision.equalsIgnoreCase("Ayuda")) {
