@@ -234,7 +234,7 @@ public class Main {
                     break;
                 }
                 continuar(teclado);
-                int danoOponente = dan.calcularAtaque();
+                int danoOponente = oponente.calcularAtaque();
                 ryu.recibirDano(danoOponente);
                 System.out.println(escenaCombate2);
                 mostrarBarra(ryu, oponente);
@@ -243,6 +243,7 @@ public class Main {
                     System.out.println(Escenas.gameover());
                     enter(2);
                     continuar(teclado);
+                    return;
                 }
             }
         }
