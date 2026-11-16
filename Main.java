@@ -2,6 +2,7 @@
 import java.util.Scanner;
 
 import XML.LeerXML;
+import XML.ModificarXML;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -30,9 +31,10 @@ public class Main {
                 System.out.println("Pulsa Enter para volver al menú principal");
                 continuar(teclado);
             } else if (decision.equalsIgnoreCase("Nueva partida")) {
-                nombreusuario(teclado);
+                String usuario = nombreusuario(teclado);
                 intro(teclado, tutorial());
-                combate(teclado, ryu, dan, akuma, baison, oponente);
+                int puntuacion = combate(teclado, ryu, dan, akuma, baison, oponente);
+                ModificarXML.actualizarPuntuacion(usuario, puntuacion);
             } else if (decision.isBlank()) {
                 System.out.println("ERROR: Entrada nula no válida");
                 enter(1);
@@ -56,7 +58,7 @@ public class Main {
         teclado.nextLine();
     }
 
-    static void nombreusuario(Scanner teclado) {
+    static String nombreusuario(Scanner teclado) {
         enter(1);
         String usuario;
         boolean error;
@@ -72,6 +74,7 @@ public class Main {
                 error = false;
             }
         } while (error);
+        return usuario;
     }
 
     static void intro(Scanner teclado, String mostrartutorial) {
@@ -165,8 +168,9 @@ public class Main {
         }
     }
 
-    static void combate(Scanner teclado, Ryu ryu, Dan_Hibiki dan, Akuma akuma, Baison baison, Personaje oponente) {
+    static int combate(Scanner teclado, Ryu ryu, Dan_Hibiki dan, Akuma akuma, Baison baison, Personaje oponente) {
         int ronda;
+        int puntuacion = 0;
         String escenaCombate1 = Escenas.escena1CombateRyu();
         String escenaCombate2 = Escenas.escena1CombateDan();
         for (ronda = 0; ronda < 3; ronda++) {
@@ -197,7 +201,7 @@ public class Main {
             while (ryu.getVida() > 0 && oponente.getVida() > 0) {
                 String accion = teclado.nextLine();
                 if (accion.equalsIgnoreCase("Abandonar")) {
-                    return;
+                    return puntuacion;
                 }
                 if (accion.equalsIgnoreCase("Inventario")) {
                     mostrarInventario(inventario, disponibles);
@@ -229,6 +233,10 @@ public class Main {
                     continue;
                 }
                 if (oponente.getVida() == 0) {
+                    puntuacion += 100;
+                    if (ronda == 2) {
+                        puntuacion += 50;
+                    }
                     enter(2);
                     System.out.println(Escenas.win());
                     enter(2);
@@ -245,9 +253,10 @@ public class Main {
                     System.out.println(Escenas.gameover());
                     enter(2);
                     continuar(teclado);
-                    return;
+                    return puntuacion;
                 }
             }
         }
+        return puntuacion;
     }
 }
