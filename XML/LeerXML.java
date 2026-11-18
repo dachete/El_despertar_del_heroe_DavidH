@@ -11,6 +11,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 public class LeerXML {
+    private static final int LIMITE_RANKING = 10;
+
     public static void mostrarRanking() throws Exception {
         CrearXML.crearSiNoExiste();
 
@@ -41,7 +43,8 @@ public class LeerXML {
             return;
         }
 
-        for (int i = 0; i < jugadores.size(); i++) {
+        int cantidadJugadores = Math.min(jugadores.size(), LIMITE_RANKING);
+        for (int i = 0; i < cantidadJugadores; i++) {
             Element jugador = jugadores.get(i);
             System.out.println();
             System.out.println((i + 1) + ". " + jugador.getAttribute("nombre")
