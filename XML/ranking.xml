@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ranking>
-    <jugador nombre="dac">
+        
+    <jugador nombre="da">
+                
+        <puntuacion>700</puntuacion>
+            
+    </jugador>
+        
+    <jugador nombre="dachete">
+                
         <puntuacion>350</puntuacion>
+            
+    </jugador>
+        
+    <jugador nombre="dac">
+                
+        <puntuacion>350</puntuacion>
+            
+    </jugador>
+    
+    <jugador nombre="david">
+        <puntuacion>100</puntuacion>
     </jugador>
 </ranking>
